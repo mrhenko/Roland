@@ -17,10 +17,7 @@ byte velocityByte = 0;
 
 boolean noteOnOrOff = false;
 
-int kickMotor = 1;
-int snareMotor = 2;
-int hihatMotor = 3;
-int crashMotor = 4;
+int drumMotors[ 4 ];
 
 // Motor
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -28,8 +25,16 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 
 void setup() {
+  // Initialize addresses to drums.
+  drumMotors[ 0x24 ] = 1;
+  drumMotors[ 0x26 ] = 2;
+  drumMotors[ 0x2A ] = 3;
+  drumMotors[ 0x31 ] = 4;
+  
+  // Setup serial interface for MIDI.
   Serial.begin( 31250 );
   
+  // Initialize motor shield.
   AFMS.begin();
 }
 
@@ -90,28 +95,6 @@ void drum( int myDrum, boolean hitOrRelease ) {
   
 }
 
-int whichDrum ( byte nB ) {
-  
-  switch ( nB ) {
-    case 0x24: // C1, Kick
-      return kickMotor;
-      break;    
-      
-    case 0x26: // D1, Snare
-      return snareMotor;
-      // hitSnare();
-      break;
-    
-    case 0x2A: // F#1, HiHat
-      return hihatMotor;
-      break;
-      
-    case 0x31: // Crash
-      return crashMotor;
-      break;
-    
-    default: // Other
-      return 0;
-    }
-
+int whichDrum( byte nB ) {
+  return drumMotors[ nB ];
 }
