@@ -17,31 +17,18 @@ byte velocityByte;
 
 boolean noteOnOrOff = false;
 
-/*int redLed = 2;
-int greenLed = 3;
-int yellowLed = 4;
-int whiteLed = 5;
-int currentLed = 0;*/
-
 int kickMotor = 1;
 int snareMotor = 2;
 int hihatMotor = 3;
 int crashMotor = 4;
 
-
 // Motor
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
-//Adafruit_DCMotor *snareMotor = AFMS.getMotor(1);
 
 
 void setup() {
   Serial.begin( 31250 );
-  
-  /*pinMode( redLed, OUTPUT );
-  pinMode( greenLed, OUTPUT );
-  pinMode( yellowLed, OUTPUT );
-  pinMode( whiteLed, OUTPUT );*/
   
   AFMS.begin();
 }
@@ -91,53 +78,10 @@ void drum( int myDrum, boolean hitOrRelease ) {
   noteByte = 0;
   
 }
-/*    
-      noteByte = Serial.read();
-      velocityByte = Serial.read();
-      currentLed = whichLed ( noteByte );
-      
-      if ( commandByte == 0x90 ) { // Note ON
-        digitalWrite ( currentLed, HIGH );
-
-        snareMotor->setSpeed ( velocityByte + 128 );
-        snareMotor->run( FORWARD );
-      } else { // Note OFF
-        digitalWrite ( currentLed, LOW );
-        snareMotor->run( RELEASE );
-      }
-    }
-     
-      
-
-*/ 
 
 void loop() {
   checkMIDI();
 }
-
-/*void noteOn(int cmd, int pitch, int velocity) {
-  Serial.write(cmd);
-  Serial.write(pitch);
-  Serial.write(velocity);
-}*/
-
-/*int whichLed ( byte nB ) {
-  switch ( noteByte ) {
-    case 0x24: // C1, Kick
-      return redLed;
-      break;    
-      
-    case 0x26: // D1, Snare
-      return greenLed;
-      hitSnare();
-      break;
-    
-    case 0x2A: // F#1, HiHat
-      return yellowLed;
-      break;
-      
-    }
-}*/
 
 int whichDrum ( byte nB ) {
   
@@ -164,8 +108,3 @@ int whichDrum ( byte nB ) {
     }
 
 }
-
-/*void hitSnare() {
-  snareMotor->setSpeed( 255 );
-  snareMotor->run( FORWARD );
-}*/
