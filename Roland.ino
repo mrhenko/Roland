@@ -11,9 +11,9 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_PWMServoDriver.h"
 
-byte commandByte;
+byte commandByte = 0;
 byte noteByte = 0;
-byte velocityByte;
+byte velocityByte = 0;
 
 boolean noteOnOrOff = false;
 
