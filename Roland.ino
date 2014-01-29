@@ -48,7 +48,7 @@ void checkMIDI() {
     if ( ( noteOnOrOff == true ) && ( noteByte != 0 ) ) { // We have a note ON or OFF and a note value
       velocityByte = Serial.read();
       
-      int currentDrum = whichDrum( noteByte );
+      int currentDrum = getMotor( noteByte );
       
       if ( commandByte == 0x90 ) { // Note ON
         drum( currentDrum, true );
@@ -95,6 +95,6 @@ void drum( int myDrum, boolean hitOrRelease ) {
   
 }
 
-int whichDrum( byte nB ) {
+int getMotor( byte nB ) {
   return drumMotors[ nB ];
 }
