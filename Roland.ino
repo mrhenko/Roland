@@ -33,8 +33,11 @@ void setup() {
   AFMS.begin();
 }
 
+void loop() {
+  checkMIDI();
+}
+
 void checkMIDI() {
-  
   if ( Serial.available() ) { // Do we have any serial data?
   
     if ( ( noteOnOrOff == true ) && ( noteByte != 0 ) ) { // We have a note ON or OFF and a note value
@@ -59,7 +62,6 @@ void checkMIDI() {
     if ( ( commandByte == 0x90 ) || ( commandByte == 0x80 ) ) { // Note ON or OFF
       noteOnOrOff = true;
     }
-    
   }
 }
 
@@ -86,10 +88,6 @@ void drum( int myDrum, boolean hitOrRelease ) {
   noteByte = 0;
   velocityByte = 0;
   
-}
-
-void loop() {
-  checkMIDI();
 }
 
 int whichDrum ( byte nB ) {
