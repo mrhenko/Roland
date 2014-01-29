@@ -37,16 +37,6 @@ void checkMIDI() {
   
   if ( Serial.available() ) { // Do we have any serial data?
   
-    if ( noteOnOrOff == true ) { // Last byte was a note ON or OFF
-      noteByte = Serial.read();
-    } else {
-      commandByte = Serial.read();
-    }
-    
-    if ( ( commandByte == 0x90 ) || ( commandByte == 0x80 ) ) { // Note ON or OFF
-      noteOnOrOff = true;
-    }
-    
     if ( ( noteOnOrOff == true ) && ( noteByte != 0 ) ) { // We have a note ON or OFF and a note value
       velocityByte = Serial.read();
       
@@ -59,6 +49,16 @@ void checkMIDI() {
       }
       
     }
+  
+    if ( noteOnOrOff == true ) { // Last byte was a note ON or OFF
+      noteByte = Serial.read();
+    } else {
+      commandByte = Serial.read();
+    }
+    
+    if ( ( commandByte == 0x90 ) || ( commandByte == 0x80 ) ) { // Note ON or OFF
+      noteOnOrOff = true;
+    }
     
   }
 }
@@ -68,7 +68,15 @@ void drum( int myDrum, boolean hitOrRelease ) {
   Adafruit_DCMotor *myDrumMotor = AFMS.getMotor( myDrum );
   
   if ( hitOrRelease == true ) { // HIT
-    myDrumMotor->setSpeed( 255 );
+  
+    int motorSpeed = 0; // 255;
+    
+    if ( velocityByte > 0 ) {
+      motorSpeed = (byte)velocityByte + 128;
+      //motorSpeed = 20;
+    }
+  
+    myDrumMotor->setSpeed( motorSpeed );
     myDrumMotor->run( FORWARD );
   } else { // RELEASE
     myDrumMotor->run( RELEASE );
@@ -76,6 +84,7 @@ void drum( int myDrum, boolean hitOrRelease ) {
   
   noteOnOrOff = false;
   noteByte = 0;
+  velocityByte = 0;
   
 }
 
