@@ -14,4 +14,4 @@ Built and programmed by
 
 
 [1]: http://github.com/mrhenko
-[1]: http://github.com/mikaeljorhult
+[2]: http://github.com/mikaeljorhult
