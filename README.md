@@ -10,7 +10,8 @@ Built and programmed by
 
 * Staffan Andersson
 * [Henrik Carlsson][1]
-* Mikael Jorhult
+* [Mikael Jorhult][2]
 
 
 [1]: http://github.com/mrhenko
+[1]: http://github.com/mikaeljorhult
