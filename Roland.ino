@@ -61,7 +61,7 @@ void drum( int myDrum, byte velocity ) {
   Adafruit_DCMotor *drumMotor = AFMS.getMotor( myDrum );
   
   if ( velocity > 0 ) { // HIT
-    int motorSpeed = (byte)velocity + 128; // 255;
+    int motorSpeed = ( byte ) velocity + 128; // 255;
     
     drumMotor->setSpeed( motorSpeed );
     drumMotor->run( FORWARD );
