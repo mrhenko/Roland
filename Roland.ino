@@ -12,11 +12,6 @@
 #include "utility/Adafruit_PWMServoDriver.h"
 
 byte commandByte = 0;
-byte noteByte = 0;
-byte velocityByte = 0;
-
-boolean noteOnOrOff = false;
-
 int drumMotors[ 4 ];
 
 // Motor
@@ -43,34 +38,20 @@ void loop() {
 }
 
 void checkMIDI() {
-  if ( Serial.available() ) { // Do we have any serial data?
-  
-    if ( ( noteOnOrOff == true ) && ( noteByte != 0 ) ) { // We have a note ON or OFF and a note value
-      velocityByte = Serial.read();
-      
-      int currentDrum = getMotor( noteByte );
-      
-      if ( commandByte == 0x90 ) { // Note ON
-        drum( currentDrum, true );
-      } else if ( commandByte == 0x80 ) { // Note OFF
-        drum( currentDrum, false );
-      }
-      
-    }
-  
-    if ( noteOnOrOff == true ) { // Last byte was a note ON or OFF
-      noteByte = Serial.read();
-    } else {
-      commandByte = Serial.read();
-    }
+  // Check if we have any serial data.
+  if ( Serial.available() ) {
+    // Read first byte (command).
+    commandByte = Serial.read();
     
-    if ( ( commandByte == 0x90 ) || ( commandByte == 0x80 ) ) { // Note ON or OFF
-      noteOnOrOff = true;
+    // Just listen for note on and off.
+    if ( commandByte == 0x90 || commandByte == 0x80 ) {
+      byte values[ 2 ];
+      getBytes( 2, values );
     }
   }
 }
 
-void drum( int myDrum, boolean hitOrRelease ) {
+/*void drum( int myDrum, boolean hitOrRelease ) {
  
   Adafruit_DCMotor *myDrumMotor = AFMS.getMotor( myDrum );
   
@@ -93,8 +74,19 @@ void drum( int myDrum, boolean hitOrRelease ) {
   noteByte = 0;
   velocityByte = 0;
   
-}
+}*/
 
 int getMotor( byte nB ) {
   return drumMotors[ nB ];
+}
+
+void getBytes( int expectedBytes, byte savedBytes[] ) {
+  int receivedBytes = 0;
+  
+  do {
+    if ( Serial.available() ) {
+      savedBytes[ receivedBytes ] = Serial.read();
+      receivedBytes++;
+    }
+  } while( receivedBytes < expectedBytes );
 }
