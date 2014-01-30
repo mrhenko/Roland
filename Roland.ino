@@ -46,35 +46,29 @@ void checkMIDI() {
     // Just listen for note on and off.
     if ( commandByte == 0x90 || commandByte == 0x80 ) {
       byte values[ 2 ];
+      int drumMotor = 0;
       getBytes( 2, values );
+      drumMotor = getMotor( values[ 0 ] );
+      
+      if ( drumMotor > 0 ) {
+        drum( drumMotor, values[ 1 ] );
+      }
     }
   }
 }
 
-/*void drum( int myDrum, boolean hitOrRelease ) {
- 
-  Adafruit_DCMotor *myDrumMotor = AFMS.getMotor( myDrum );
+void drum( int myDrum, byte velocity ) {
+  Adafruit_DCMotor *drumMotor = AFMS.getMotor( myDrum );
   
-  if ( hitOrRelease == true ) { // HIT
-  
-    int motorSpeed = 0; // 255;
+  if ( velocity > 0 ) { // HIT
+    int motorSpeed = (byte)velocity + 128; // 255;
     
-    if ( velocityByte > 0 ) {
-      motorSpeed = (byte)velocityByte + 128;
-      //motorSpeed = 20;
-    }
-  
-    myDrumMotor->setSpeed( motorSpeed );
-    myDrumMotor->run( FORWARD );
+    drumMotor->setSpeed( motorSpeed );
+    drumMotor->run( FORWARD );
   } else { // RELEASE
-    myDrumMotor->run( RELEASE );
+    drumMotor->run( RELEASE );
   }
-  
-  noteOnOrOff = false;
-  noteByte = 0;
-  velocityByte = 0;
-  
-}*/
+}
 
 int getMotor( byte nB ) {
   return drumMotors[ nB ];
