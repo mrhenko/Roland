@@ -33,7 +33,8 @@ void setup() {
   Serial.begin( 31250 );
 
   // Initialize motor shield.
-  AFMS.begin();
+  AFMS0.begin();
+  AFMS1.begin();
 }
 
 void loop() {
