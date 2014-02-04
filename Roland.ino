@@ -13,12 +13,19 @@
 
 byte commandByte = 0;
 
-// Motor
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_DCMotor *kickMotor = AFMS.getMotor( 1 );
-Adafruit_DCMotor *snareMotor = AFMS.getMotor( 2 );
-Adafruit_DCMotor *hihatMotor = AFMS.getMotor( 3 );
-Adafruit_DCMotor *crashMotor = AFMS.getMotor( 4 );
+// Initiate Motorshields.
+Adafruit_MotorShield AFMS0 = Adafruit_MotorShield( 0x60 );
+Adafruit_MotorShield AFMS1 = Adafruit_MotorShield( 0x61 );
+
+// Declare pointers to motors.
+Adafruit_DCMotor *kickMotor       = AFMS0.getMotor( 1 );
+Adafruit_DCMotor *snareMotor      = AFMS0.getMotor( 2 );
+Adafruit_DCMotor *hihatMotor      = AFMS0.getMotor( 3 );
+Adafruit_DCMotor *hihatPedalMotor = AFMS0.getMotor( 4 );
+Adafruit_DCMotor *tom1Motor       = AFMS1.getMotor( 1 );
+Adafruit_DCMotor *tom2Motor       = AFMS1.getMotor( 2 );
+Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 3 );
+Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );
 Adafruit_DCMotor *currentMotor;
 
 void setup() {
@@ -73,12 +80,32 @@ boolean getMotor( byte nB ) {
       currentMotor = snareMotor;
       break;
     
+    case 0x29: // B1/C2/D2, Tom 2
+    case 0x2B:
+    case 0x2D:
+      currentMotor = tom2Motor;
+      break;
+    
+    case 0x2F: // F1/G1/A1, Tom 2
+    case 0x30:
+    case 0x32:
+      currentMotor = tom1Motor;
+      break;
+    
     case 0x2A: // F#1, HiHat
       currentMotor = hihatMotor;
       break;
-      
-    case 0x31: // Crash
+    
+    case 0x2E: // A#1, Open HiHat
+      currentMotor = hihatMotor;
+      break;
+    
+    case 0x31: // C#2, Crash
       currentMotor = crashMotor;
+      break;
+    
+    case 0x33: // D#2, Ride
+      currentMotor = rideMotor;
       break;
     
     default: // Other
