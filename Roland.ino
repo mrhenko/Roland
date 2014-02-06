@@ -28,6 +28,17 @@ Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 3 );
 Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );
 Adafruit_DCMotor *currentMotor;
 
+// Timestamps for note ON
+int kickHitTime = -1;
+int snareHitTime = -1;
+int hihatHitTime = -1;
+int tom1HitTime = -1;
+int tom2HitTime = -1;
+int crashHitTime = -1;
+int rideHitTime = -1;
+
+int modulusValue = 10000;
+
 // Use variables for NOTE ON and OFF to simplify the
 // usage of channels.
 int midiChannel = 10; // Channel 10
@@ -45,7 +56,28 @@ void setup() {
 }
 
 void loop() {
+  kickHitTime = timeLimit( kickHitTime, kickMotor );
+  snareHitTime = timeLimit( snareHitTime, snareMotor );
+  hihatHitTime = timeLimit( hihatHitTime, hihatMotor );
+  tom1HitTime = timeLimit( tom1HitTime, tom1Motor );
+  tom2HitTime = timeLimit( tom2HitTime, tom2Motor );
+  crashHitTime = timeLimit( crashHitTime, crashMotor );
+  rideHitTime = timeLimit( rideHitTime, rideMotor );
+  
   checkMIDI();
+}
+
+int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
+  if ( hitTime != -1 ) {
+    if ( getTime( true ) - hitTime > 125 ) {
+      // Turn of the drum
+      myMotor->run( RELEASE );
+      return -1;
+    }
+  }
+  
+  return hitTime;
+  
 }
 
 void checkMIDI() {
@@ -57,9 +89,14 @@ void checkMIDI() {
     // Just listen for note on and off.
     if ( commandByte == noteOn || commandByte == noteOff ) {
       byte values[ 2 ];
-      getBytes( 2, values );
+      getBytes( 2, values );        
       
-      if ( getMotor( values[ 0 ] ) ) {
+      boolean isOn = false;
+      if ( commandByte == noteOn ) {
+        isOn = true;
+      }
+      
+      if ( getMotor( values[ 0 ], isOn ) ) {
         drum( values[ 1 ] );
       }
     }
@@ -78,42 +115,50 @@ void drum( byte velocity ) {
   }
 }
 
-boolean getMotor( byte nB ) {
+boolean getMotor( byte nB, boolean isOn ) {
   switch ( nB ) {
     case 0x24: // C1, Kick
       currentMotor = kickMotor;
+      kickHitTime = getTime( isOn );
       break;    
       
     case 0x26: // D1, Snare
       currentMotor = snareMotor;
+      snareHitTime = getTime( isOn );
       break;
     
     case 0x29: // B1/C2/D2, Tom 2
     case 0x2B:
     case 0x2D:
       currentMotor = tom2Motor;
+      tom2HitTime = getTime( isOn );
       break;
     
     case 0x2F: // F1/G1/A1, Tom 2
     case 0x30:
     case 0x32:
       currentMotor = tom1Motor;
+      tom1HitTime = getTime( isOn );
       break;
     
     case 0x2A: // F#1, HiHat
       currentMotor = hihatMotor;
+      hihatHitTime = getTime( isOn );
       break;
     
     case 0x2E: // A#1, Open HiHat
       currentMotor = hihatMotor;
+      hihatHitTime = getTime( isOn );
       break;
     
     case 0x31: // C#2, Crash
       currentMotor = crashMotor;
+      crashHitTime = getTime( isOn );
       break;
     
     case 0x33: // D#2, Ride
       currentMotor = rideMotor;
+      rideHitTime = getTime( isOn );
       break;
     
     default: // Other
@@ -121,6 +166,14 @@ boolean getMotor( byte nB ) {
   }
   
   return true;
+}
+
+int getTime( boolean isOn ) {
+  if ( isOn ) {
+    return millis() % modulusValue;
+  } else {
+    return -1;
+  }
 }
 
 void getBytes( int expectedBytes, byte savedBytes[] ) {
