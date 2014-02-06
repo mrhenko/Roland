@@ -69,8 +69,12 @@ void loop() {
 
 int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
   if ( hitTime != -1 ) {
-    if ( getTime( true ) - hitTime > 125 ) {
-      // Turn of the drum
+    int time = getTime( true );
+    if ( time < hitTime ) {
+      time += modulusValue - hitTime;
+    }
+    if ( time - hitTime > 2000 ) {
+      // Turn off the drum
       myMotor->run( RELEASE );
       return -1;
     }
