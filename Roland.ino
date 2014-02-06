@@ -28,7 +28,7 @@ Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 3 );
 Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );
 Adafruit_DCMotor *currentMotor;
 
-// Timestamps for note ON
+// Timestamps for note ON.
 int kickHitTime = -1;
 int snareHitTime = -1;
 int hihatHitTime = -1;
@@ -37,7 +37,8 @@ int tom2HitTime = -1;
 int crashHitTime = -1;
 int rideHitTime = -1;
 
-int modulusValue = 10000;
+const int modulusValue = 10000;
+const int motorLimit = 2000;
 
 // Use variables for NOTE ON and OFF to simplify the
 // usage of channels.
@@ -50,12 +51,13 @@ void setup() {
   // Setup serial interface for MIDI.
   Serial.begin( 31250 );
 
-  // Initialize motor shield.
+  // Initialize motor shields.
   AFMS0.begin();
   AFMS1.begin();
 }
 
 void loop() {
+  // Check and release motors that been running longer than limit.
   kickHitTime = timeLimit( kickHitTime, kickMotor );
   snareHitTime = timeLimit( snareHitTime, snareMotor );
   hihatHitTime = timeLimit( hihatHitTime, hihatMotor );
@@ -64,24 +66,29 @@ void loop() {
   crashHitTime = timeLimit( crashHitTime, crashMotor );
   rideHitTime = timeLimit( rideHitTime, rideMotor );
   
+  // Check for MIDI messages.
   checkMIDI();
 }
 
 int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
-  if ( hitTime != -1 ) {
+  // Check if drum has been triggered.
+  if ( hitTime >= 0 ) {
     int time = getTime( true );
+    
+    // Timestamp is less than current, set time to difference.
     if ( time < hitTime ) {
       time += modulusValue - hitTime;
     }
-    if ( time - hitTime > 2000 ) {
-      // Turn off the drum
+    
+    // Has motor run longer than limit?
+    if ( time - hitTime > motorLimit ) {
+      // Turn off the drum.
       myMotor->run( RELEASE );
       return -1;
     }
   }
   
   return hitTime;
-  
 }
 
 void checkMIDI() {
