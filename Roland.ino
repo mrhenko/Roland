@@ -28,6 +28,13 @@ Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 3 );
 Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );
 Adafruit_DCMotor *currentMotor;
 
+// Use variables for NOTE ON and OFF to simplify the
+// usage of channels.
+int midiChannel = 10; // Channel 10
+int noteOn = 144 + midiChannel - 1;    // Minus 1 since MIDI Channels
+int noteOff = 128 + midiChannel - 1;   // aren't zero indexed but the
+                                       // actual MIDI data is.
+
 void setup() {
   // Setup serial interface for MIDI.
   Serial.begin( 31250 );
@@ -48,7 +55,7 @@ void checkMIDI() {
     commandByte = Serial.read();
 
     // Just listen for note on and off.
-    if ( commandByte == 0x90 || commandByte == 0x80 ) {
+    if ( commandByte == noteOn || commandByte == noteOff ) {
       byte values[ 2 ];
       getBytes( 2, values );
       
