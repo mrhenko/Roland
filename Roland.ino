@@ -101,7 +101,9 @@ void checkMIDI() {
       byte values[ 2 ];
       getBytes( 2, values );
       
+      // Send MIDI note value and boolean wether it's a on or not.
       if ( getMotor( values[ 0 ], commandByte == noteOn ) ) {
+        // Trigger drum if it should be on.
         drum( values[ 1 ] );
       }
     }
@@ -111,7 +113,7 @@ void checkMIDI() {
 void drum( byte velocity ) {
   if ( velocity > 0 ) { // HIT
     int motorSpeed = ( byte ) velocity + 128; // 255;
-
+    
     currentMotor->setSpeed( motorSpeed );
     currentMotor->run( FORWARD );
   } 
