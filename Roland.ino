@@ -99,14 +99,9 @@ void checkMIDI() {
     // Just listen for note on and off.
     if ( commandByte == noteOn || commandByte == noteOff ) {
       byte values[ 2 ];
-      getBytes( 2, values );        
+      getBytes( 2, values );
       
-      boolean isOn = false;
-      if ( commandByte == noteOn ) {
-        isOn = true;
-      }
-      
-      if ( getMotor( values[ 0 ], isOn ) ) {
+      if ( getMotor( values[ 0 ], commandByte == noteOn ) ) {
         drum( values[ 1 ] );
       }
     }
