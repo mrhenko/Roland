@@ -29,23 +29,22 @@ Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );
 Adafruit_DCMotor *currentMotor;
 
 // Timestamps for note ON.
-int kickHitTime = -1;
+int kickHitTime  = -1;
 int snareHitTime = -1;
 int hihatHitTime = -1;
-int tom1HitTime = -1;
-int tom2HitTime = -1;
+int tom1HitTime  = -1;
+int tom2HitTime  = -1;
 int crashHitTime = -1;
-int rideHitTime = -1;
+int rideHitTime  = -1;
 
 const int modulusValue = 10000;
 const int motorLimit = 2000;
 
-// Use variables for NOTE ON and OFF to simplify the
-// usage of channels.
+// Use variables for NOTE ON and OFF to simplify the usage of channels.
 int midiChannel = 10; // Channel 10
-int noteOn = 144 + midiChannel - 1;    // Minus 1 since MIDI Channels
-int noteOff = 128 + midiChannel - 1;   // aren't zero indexed but the
-                                       // actual MIDI data is.
+int noteOn      = 144 + midiChannel - 1;   // Minus 1 since MIDI Channels
+int noteOff     = 128 + midiChannel - 1;   // aren't zero indexed but the
+                                           // actual MIDI data is.
 
 void setup() {
   // Setup serial interface for MIDI.
