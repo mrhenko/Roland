@@ -57,13 +57,13 @@ void setup() {
 
 void loop() {
   // Check and release motors that been running longer than limit.
-  kickHitTime = timeLimit( kickHitTime, kickMotor );
+  kickHitTime  = timeLimit( kickHitTime,  kickMotor );
   snareHitTime = timeLimit( snareHitTime, snareMotor );
   hihatHitTime = timeLimit( hihatHitTime, hihatMotor );
-  tom1HitTime = timeLimit( tom1HitTime, tom1Motor );
-  tom2HitTime = timeLimit( tom2HitTime, tom2Motor );
+  tom1HitTime  = timeLimit( tom1HitTime,  tom1Motor );
+  tom2HitTime  = timeLimit( tom2HitTime,  tom2Motor );
   crashHitTime = timeLimit( crashHitTime, crashMotor );
-  rideHitTime = timeLimit( rideHitTime, rideMotor );
+  rideHitTime  = timeLimit( rideHitTime,  rideMotor );
   
   // Check for MIDI messages.
   checkMIDI();
@@ -71,7 +71,7 @@ void loop() {
 
 int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
   // Check if drum has been triggered.
-  if ( hitTime >= 0 ) {
+  if ( hitTime > -1 ) {
     int time = getTime( true );
     
     // Timestamp is less than current, set time to difference.
@@ -112,12 +112,11 @@ void checkMIDI() {
 
 void drum( byte velocity ) {
   if ( velocity > 0 ) { // HIT
-    int motorSpeed = ( byte ) velocity + 128; // 255;
+    int motorSpeed = ( byte ) velocity + 128;
     
     currentMotor->setSpeed( motorSpeed );
     currentMotor->run( FORWARD );
-  } 
-  else { // RELEASE
+  } else { // RELEASE
     currentMotor->run( RELEASE );
   }
 }
@@ -141,7 +140,7 @@ boolean getMotor( byte nB, boolean isOn ) {
       tom2HitTime = getTime( isOn );
       break;
     
-    case 0x2F: // F1/G1/A1, Tom 2
+    case 0x2F: // F1/G1/A1, Tom 1
     case 0x30:
     case 0x32:
       currentMotor = tom1Motor;
