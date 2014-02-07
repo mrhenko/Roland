@@ -38,7 +38,7 @@ int crashHitTime = -1;
 int rideHitTime  = -1;
 
 const int modulusValue = 10000;
-const int motorLimit = 2000;
+const int motorLimit = 125;
 
 // Use variables for NOTE ON and OFF to simplify the usage of channels.
 int midiChannel = 10; // Channel 10
@@ -73,14 +73,15 @@ int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
   // Check if drum has been triggered.
   if ( hitTime > -1 ) {
     int time = getTime( true );
+    int runTime = time - hitTime;
     
     // Timestamp is less than current, set time to difference.
     if ( time < hitTime ) {
-      time += modulusValue - hitTime;
+      runTime = time + modulusValue - hitTime;
     }
     
     // Has motor run longer than limit?
-    if ( time - hitTime > motorLimit ) {
+    if ( runTime > motorLimit ) {
       // Turn off the drum.
       myMotor->run( RELEASE );
       return -1;
