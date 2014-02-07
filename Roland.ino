@@ -168,10 +168,11 @@ boolean getMotor( byte nB, boolean isOn ) {
       rideHitTime = getTime( isOn );
       break;
     
-    default: // Other
+    default: // Other, don't trigger any motors.
       return false;
   }
   
+  // Set motor should be triggered.
   return true;
 }
 
@@ -185,9 +186,11 @@ int getTime( boolean isOn ) {
 
 void getBytes( int expectedBytes, byte savedBytes[] ) {
   int receivedBytes = 0;
-
+  
+  // Wait and read until received expected number of values.
   do {
     if ( Serial.available() ) {
+      // Save values in supplied array.
       savedBytes[ receivedBytes ] = Serial.read();
       receivedBytes++;
     }
