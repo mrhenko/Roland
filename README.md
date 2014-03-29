@@ -6,15 +6,16 @@
 More information will be added as the project progresses.
 
 ## Video demo ##
-<iframe width="1280" height="720" src="//www.youtube.com/embed/_i3j9RsZKl0?rel=0" frameborder="0" allowfullscreen></iframe>
+* [Video demo on YouTube][1]
 
 ## Byline ##
 Built and programmed by
 
 * Staffan Andersson
-* [Henrik Carlsson][1]
-* [Mikael Jorhult][2]
+* [Henrik Carlsson][2]
+* [Mikael Jorhult][3]
 
 
-[1]: http://github.com/mrhenko
-[2]: http://github.com/mikaeljorhult
+[1]: http://www.youtube.com/watch?v=_i3j9RsZKl0
+[2]: http://github.com/mrhenko
+[3]: http://github.com/mikaeljorhult
