@@ -5,6 +5,9 @@
 
 More information will be added as the project progresses.
 
+## Video demo ##
+<iframe width="1280" height="720" src="//www.youtube.com/embed/_i3j9RsZKl0?rel=0" frameborder="0" allowfullscreen></iframe>
+
 ## Byline ##
 Built and programmed by
 
