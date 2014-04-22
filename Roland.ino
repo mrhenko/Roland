@@ -11,31 +11,23 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_PWMServoDriver.h"
 
-//byte commandByte = 0;
-int midiBytes[3] = { 0, -1, -1 };
+int midiBytes[ 3 ] = { 0, -1, -1 };
 
 // Initiate Motorshields.
 Adafruit_MotorShield AFMS0 = Adafruit_MotorShield( 0x60 );
 Adafruit_MotorShield AFMS1 = Adafruit_MotorShield( 0x61 );
 
 // Declare pointers to motors.
-Adafruit_DCMotor *kickMotor       = AFMS0.getMotor( 1 );
-Adafruit_DCMotor *snareMotor      = AFMS0.getMotor( 2 );
-Adafruit_DCMotor *tom1Motor       = AFMS0.getMotor( 3 );
-Adafruit_DCMotor *tom2Motor       = AFMS0.getMotor( 4 );
+Adafruit_DCMotor *kickMotor    = AFMS0.getMotor( 1 );
+Adafruit_DCMotor *snareMotor   = AFMS0.getMotor( 2 );
+Adafruit_DCMotor *tom1Motor    = AFMS0.getMotor( 3 );
+Adafruit_DCMotor *tom2Motor    = AFMS0.getMotor( 4 );
 
-Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 1 );
-Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 2 );
-Adafruit_DCMotor *hihatMotor      = AFMS1.getMotor( 3 );
-Adafruit_DCMotor *cowbellMotor    = AFMS1.getMotor( 4 );
+Adafruit_DCMotor *crashMotor   = AFMS1.getMotor( 1 );
+Adafruit_DCMotor *rideMotor    = AFMS1.getMotor( 2 );
+Adafruit_DCMotor *hihatMotor   = AFMS1.getMotor( 3 );
+Adafruit_DCMotor *cowbellMotor = AFMS1.getMotor( 4 );
 
-
-/*Adafruit_DCMotor *hihatMotor      = AFMS0.getMotor( 3 );
-Adafruit_DCMotor *hihatPedalMotor = AFMS0.getMotor( 4 );
-Adafruit_DCMotor *tom1Motor       = AFMS1.getMotor( 1 );
-Adafruit_DCMotor *tom2Motor       = AFMS1.getMotor( 2 );
-Adafruit_DCMotor *crashMotor      = AFMS1.getMotor( 3 );
-Adafruit_DCMotor *rideMotor       = AFMS1.getMotor( 4 );*/
 Adafruit_DCMotor *currentMotor;
 
 // Timestamps for note ON.
@@ -56,7 +48,6 @@ int midiChannel = 10; // Channel 10
 int noteOn      = 144 + midiChannel - 1;   // Minus 1 since MIDI Channels
 int noteOff     = 128 + midiChannel - 1;   // aren't zero indexed but the
                                            // actual MIDI data is.
-
 // This is used as a "scaling value" to scale
 // the speed to a proper motor speed value.
 int speedFloor = 150;
@@ -110,8 +101,6 @@ int timeLimit( int hitTime, Adafruit_DCMotor *myMotor ) {
 void checkMIDI() {
   // Check to see if we have collected a full MIDI Message
   if ( ( midiBytes[ 0 ] != 0 ) && ( midiBytes[ 1 ] != -1 ) && ( midiBytes[ 2 ] != -1 ) ) {
-    
-    
     if ( getMotor( midiBytes[ 1 ], midiBytes[ 0 ] == noteOn ) ) {
       // If motor is successfully selcted and set to
       // global variable currentMotor.
@@ -122,7 +111,6 @@ void checkMIDI() {
   }
   
   if ( Serial.available() ) { // Serial data exists
-    
     byte serialByte = Serial.read();
     
     if ( serialByte > 127 ) { // Status byte
@@ -152,8 +140,6 @@ void resetMidiValues() {
 
 void drum( byte velocity ) {
   if ( velocity > 0 ) { // HIT
-  
-    // int motorSpeed = ( byte ) velocity + 128;
     int motorSpeed = map( velocity, 0, 127, speedFloor, 255 );
     
     currentMotor->setSpeed( motorSpeed );
